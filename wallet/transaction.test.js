@@ -1,8 +1,10 @@
 const Transaction = require('./transaction');
 const Wallet = require('./index');
+const { MINING_REWARD } = require('../config');
 
 describe('Transaction', () => {
     let transaction, wallet, recipient, amount;
+
     beforeEach(() => {
         wallet = new Wallet();
         amount = 50;
@@ -10,7 +12,7 @@ describe('Transaction', () => {
         transaction = Transaction.newTransaction(wallet, recipient, amount);
     });
 
-    it('ouputs the `amount` subtracted from the wallet balance', () => {
+    it('outputs the `amount` subtracted from the wallet balance', () => {
         expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
             .toEqual(wallet.balance - amount);
     });
@@ -46,13 +48,14 @@ describe('Transaction', () => {
 
     describe('and updating a transaction', () => {
         let nextAmount, nextRecipient;
+
         beforeEach(() => {
             nextAmount = 20;
             nextRecipient = 'n3xt-4ddr355';
             transaction = transaction.update(wallet, nextRecipient, nextAmount);
         });
 
-        it("subtracts the next amount from the sender’s output", () => {
+        it(`subtracts the next amount from the sender's output`, () => {
             expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
                 .toEqual(wallet.balance - amount - nextAmount);
         });
@@ -60,6 +63,17 @@ describe('Transaction', () => {
         it('outputs an amount for the next recipient', () => {
             expect(transaction.outputs.find(output => output.address === nextRecipient).amount)
                 .toEqual(nextAmount);
+        });
+    });
+
+    describe('creating a reward transaction', () => {
+        beforeEach(() => {
+            transaction = Transaction.rewardTransaction(wallet, Wallet.blockchainWallet());
+        });
+
+        it(`reward the miner's wallet`, () => {
+            expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
+                .toEqual(MINING_REWARD);
         });
     });
 });

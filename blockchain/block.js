@@ -13,16 +13,16 @@ class Block {
 
     toString() {
         return `Block -
-        Timestamp   : ${this.timestamp}
-        Last Hash   : ${this.lastHash.substring(0,10)}
-        Hash        : ${this.hash.substring(0,10)}
-        Nonce       : ${this.nonce}
-        Difficulty  : ${this.difficulty}
-        Data        : ${this.data}`;
+      Timestamp : ${this.timestamp}
+      Last Hash : ${this.lastHash.substring(0, 10)}
+      Hash      : ${this.hash.substring(0, 10)}
+      Nonce     : ${this.nonce}
+      Difficulty: ${this.difficulty}
+      Data      : ${this.data}`;
     }
 
     static genesis() {
-        return new this('Genesis time','-----','f1r5t-h4sh', [], 0, DIFFICULTY);
+        return new this('Genesis time', '-----', 'f1r57-h45h', [], 0, DIFFICULTY);
     }
 
     static mineBlock(lastBlock, data) {
